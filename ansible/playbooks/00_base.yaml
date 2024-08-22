@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+    - apt: autoclean=yes
+    - apt: update_cache=yes
+    - apt: upgrade=dist
+    - apt: name={{ item }} state=present
+      with_items:
+        - apache2-utils
+        - psmisc
+        - net-tools
+        - tmux
+        - tree
+        - make
+        - jq
+        - neovim
+        - direnv
+
+# apache2-utils: abのため
+# psmisc: pstreeのため
+# net-tools: ifconfigのため
