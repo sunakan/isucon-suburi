@@ -1,0 +1,7 @@
+---
+- hosts: app
+  become: yes
+  gather_facts: no
+  tasks:
+    - copy: src=../files/nginx/nginx.conf dest=/etc/nginx/nginx.conf owner=root mode=644
+    - shell: /usr/sbin/nginx -t && systemctl reload nginx
