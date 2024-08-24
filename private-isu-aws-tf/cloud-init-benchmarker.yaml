@@ -1,0 +1,28 @@
+#cloud-config
+
+timezone: Asia/Tokyo
+package_update: true
+packages:
+  - ansible
+  - curl
+  - git
+
+
+runcmd:
+  - |
+    set -e
+    
+    echo "private-isuのセットアップ(nodejs,php8,composerをスキップ)"
+    GITDIR="/tmp/private-isu"
+    rm -rf ${GITDIR}
+    git clone --depth=1 https://github.com/catatsuy/private-isu.git ${GITDIR}
+    cd ${GITDIR}/provisioning/
+    sed -i 's/isu-bench/localhost ansible_connection=local/' hosts
+    ansible-playbook -i hosts bench/ansible/playbooks.yml
+
+    echo "自作のセットアップ(for bench)"
+    GITDIR="/tmp/isucon-suburi"
+    rm -rf ${GITDIR}
+    sudo -u isucon git clone --depth=1 https://github.com/sunakan/isucon-suburi.git ${GITDIR}
+    cd ${GITDIR}/ansible/
+    ansible-playbook -i hosts playbooks/playbooks-bench.yaml
