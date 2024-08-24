@@ -1,9 +1,23 @@
 #!/bin/bash
 
-rm -rf /var/log/nginx/*.log && echo '/var/log/nginx/*.logを削除しました'
-systemctl reload nginx && echo 'nginxをreloadしました'
+set -eu
 
-echo '/var/log/nginx/access.logの行数'
+echo '----[ BEFORE ]'
+echo '行数: /var/log/nginx/access.log'
 cat /var/log/nginx/access.log | wc -l
-echo '/var/log/nginx/error.logの行数'
+echo '行数: /var/log/nginx/error.log'
+cat /var/log/nginx/error.log | wc -l
+
+echo '----[ RESET ]'
+mv /var/log/nginx/access.log var/log/nginx/access.log.old
+echo 'DONE: mv /var/log/nginx/access.log var/log/nginx/access.log.old'
+mv /var/log/nginx/error.log var/log/nginx/error.log.old
+echo 'DONE: mv /var/log/nginx/error.log var/log/nginx/error.log.old'
+systemctl reload nginx
+echo 'DONE: systemctl reload nginx'
+
+echo '----[ AFTER ]'
+echo '行数: /var/log/nginx/access.log'
+cat /var/log/nginx/access.log | wc -l
+echo '行数: /var/log/nginx/error.log'
 cat /var/log/nginx/error.log | wc -l
