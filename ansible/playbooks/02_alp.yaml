@@ -1,0 +1,12 @@
+---
+- hosts: app
+  become: yes
+  become_user: isucon
+  gather_facts: no
+  # https://github.com/tkuchiki/alp.git を/tmp/以下にclone
+  # alpをビルド
+  # alpを/usr/local/bin/にインストール(root:rootで755)
+  tasks:
+    - git: repo=https://github.com/tkuchiki/alp.git dest=/tmp/alp version=main
+    - shell: go build -o /tmp/alp/alp /tmp/alp/cmd/alp/main.go chdir=/tmp/alp
+    - shell: sudo install /tmp/alp/alp /usr/local/bin/
