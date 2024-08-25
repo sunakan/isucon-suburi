@@ -128,6 +128,26 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 11-use-force-index: ## FORCE INDEXやSTRAIGHT_JOINを使う
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/11-use-force-index.sh")
 
+.PHONY: 12-use-openssl-gem
+12-use-openssl-gem: ## openssl gemを使う
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/12-use-openssl-gem.sh")
+
+
+.PHONY: setup-all
+setup-all: ## 01~全て適用する
+	@make 01-add-comments-index
+	@make 02-increase-worker-process-for-isu-ruby
+	@make 03-delivery-static-file-from-nginx
+	@make 04-uploaded-img-to-static-file
+	@make 05-use-join-in-sql
+	@make 06-increase-limits
+	@make 07-stop-prepared-statement
+	@make 08-add-comments-index
+	@make 09-cache-sql-result
+	@make 10-add-posts-index
+	@make 11-use-force-index
+	@make 12-use-openssl-gem
+
 ################################################################################
 # Utility-Command help
 ################################################################################
