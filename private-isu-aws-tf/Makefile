@@ -108,6 +108,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 06-increase-limits: ## ファイルディスクリプタの上限を増やす
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/06-increase-limits.sh")
 
+.PHONY: 07-stop-prepared-statement
+07-stop-prepared-statement: ## プリペアドステートメントを使わない
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/07-stop-prepared-statement.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
