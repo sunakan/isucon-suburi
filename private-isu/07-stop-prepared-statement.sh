@@ -19,7 +19,7 @@ sudo -u isucon cp /tmp/isucon-suburi/private-isu/files/07-app.rb /home/isucon/pr
 echo "----[ bundle install ]"
 
 cd /home/isucon/private_isu/webapp/ruby/
-sudo -u isucon bundle install
+sudo -u isucon /home/isucon/.local/ruby/bin/bundle install
 
 sudo systemctl restart isu-ruby
 echo "isu-rubyを再起動しました"
