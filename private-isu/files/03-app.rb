@@ -319,7 +319,7 @@ module Isuconp
           redirect '/', 302
         end
 
-        if params['file'][:tempfile].read.length > UPLOAD_LIMIT
+        if params['file'][:tempfile].size > UPLOAD_LIMIT
           flash[:notice] = 'ファイルサイズが大きすぎます'
           redirect '/', 302
         end
