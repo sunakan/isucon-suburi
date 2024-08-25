@@ -333,7 +333,7 @@ module Isuconp
         )
         pid = db.last_id
 
-        # アップロードされたテンポラリファイルをmvして配信ディレクトリに移動
+        # # アップロードされたテンポラリファイルをmvして配信ディレクトリに移動
         imgfile = IMAGE_DIR + "/#{pid}.#{ext}"
         FileUtils.mv(params['file'][:tempfile], imgfile)
         FileUtils.chmod(0644, imgfile)
@@ -345,7 +345,6 @@ module Isuconp
       end
     end
 
-    # Nginxでキャッシュされていないルーティングがここまでくる
     get '/image/:id.:ext' do
       if params[:id].to_i == 0
         return ""
@@ -363,7 +362,6 @@ module Isuconp
         f = File.open(imgfile, "w")
         f.write(post[:imgdata])
         f.close()
-
         return post[:imgdata]
       end
 

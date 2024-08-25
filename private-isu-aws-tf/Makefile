@@ -89,6 +89,10 @@ tail-cloud-init-output: ## app,benchmarker上でのcloud-init-output.logをtail
 	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
 	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo sed -i"]}'
 
+.PHONY: 04-uploaded-img-to-static-file
+04-uploaded-img-to-static-file: ## アップロード画像を静的にして、Nginxでキャッシュする
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/04-uploaded-img-to-static-file.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
