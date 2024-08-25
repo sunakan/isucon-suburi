@@ -100,6 +100,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 04-uploaded-img-to-static-file: ## アップロード画像を静的にして、Nginxでキャッシュする
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/04-uploaded-img-to-static-file.sh")
 
+.PHONY: 05-use-join-in-sql
+05-use-join-in-sql: ## SQLのJOINを使う
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/05-use-join-in-sql.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
