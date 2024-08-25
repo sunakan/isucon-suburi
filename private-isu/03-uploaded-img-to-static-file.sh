@@ -14,7 +14,7 @@ echo "FROM: /tmp/isucon-suburi/private-isu/files/03-isucon.conf"
 echo "TO: /etc/nginx/sites-available/isucon.conf"
 echo "----"
 
-sudo -u isucon cp /tmp/isucon-suburi/private-isu/files/03-isucon.conf /etc/nginx/sites-available/isucon.conf
+sudo cp /tmp/isucon-suburi/private-isu/files/03-isucon.conf /etc/nginx/sites-available/isucon.conf
 
 sudo systemctl reload nginx
 sudo systemctl restart isu-ruby
