@@ -59,6 +59,7 @@ bench: ## benchmarker実行
 .PHONY: reset-and-bench
 reset-and-bench: ## ログ周りをリセットしてbenchmarkerを走らせる
 	@make reset-nginx-log
+	@make reset-mysql
 	@make reset-mysql-slow-query-log
 	@make bench
 
@@ -90,6 +91,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 .PHONY: 02-increase-worker-process-for-isu-ruby
 02-increase-worker-process-for-isu-ruby: ## appのワーカープロセスを増やす
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/02-increase-worker-process.sh")
+
+.PHONY: 03-delivery-static-file-from-nginx
+03-delivery-static-file-from-nginx: ## 静的ファイルをNginxで配信する
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/03-delivery-static-file-from-nginx.sh")
 
 .PHONY: 04-uploaded-img-to-static-file
 04-uploaded-img-to-static-file: ## アップロード画像を静的にして、Nginxでキャッシュする
