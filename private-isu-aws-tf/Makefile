@@ -124,6 +124,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 10-add-posts-index: ## appのdbのpostsテーブルにindexを貼る
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/10-add-index.sh")
 
+.PHONY: 11-use-force-index
+11-use-force-index: ## FORCE INDEXやSTRAIGHT_JOINを使う
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/11-use-force-index.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
