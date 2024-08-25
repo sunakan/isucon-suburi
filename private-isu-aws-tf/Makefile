@@ -120,6 +120,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 09-cache-sql-result: ## SQLの結果をキャッシュする
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/09-cache-sql-result.sh")
 
+.PHONY: 10-add-posts-index
+10-add-posts-index: ## appのdbのpostsテーブルにindexを貼る
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/10-add-index.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
