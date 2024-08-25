@@ -132,6 +132,9 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 12-use-openssl-gem: ## openssl gemを使う
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/12-use-openssl-gem.sh")
 
+.PHONY: 13-modify-mysql-cnf
+13-modify-mysql-cnf: ## mysqlの設定を変更
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/13-modify-mysql-cnf.sh")
 
 .PHONY: setup-all
 setup-all: ## 01~全て適用する
@@ -147,6 +150,7 @@ setup-all: ## 01~全て適用する
 	@make 10-add-posts-index
 	@make 11-use-force-index
 	@make 12-use-openssl-gem
+	@make 13-modify-mysql-cnf
 
 ################################################################################
 # Utility-Command help
