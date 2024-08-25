@@ -38,31 +38,23 @@ login.benchmarker: ## benchmarkerへssm用ユーザーでログイン
 	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-benchmarker)))
 	aws ssm start-session --target ${INSTANCE_ID}
 
-.phony: login.app.isucon
-login.app.isucon: ## appへisuconユーザーでlogin
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name aws-startinteractivecommand --parameters command="sudo su - isucon"
-
-.PHONY: login.benchmarker.isucon
-login.benchmarker.isucon: ## benchmarkerへisuconユーザーでログイン
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-benchmarker)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartInteractiveCommand --parameters command="sudo su - isucon"
+.PHONY: open-app
+open-app: ## open
+	$(eval APP_IP := $(shell aws ec2 describe-instances --filters "Name=tag:Name,Values=private-isu-app" "Name=instance-state-name,Values=running" --query 'Reservations[].Instances[].PublicIpAddress' --output text))
+	@open http://${APP_IP}/
 
 .PHONY: reset-nginx-log
 reset-nginx-log: ## app上でnginxのログをリセット(/tmp/isucon-suburiがあることが前提)
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo bash /tmp/isucon-suburi/private-isu/reset-nginx-log.sh"]}'
+	$(call exec_command,private-isu-app,"sudo bash /tmp/isucon-suburi/private-isu/reset-nginx-log.sh")
 
 .PHONY: reset-mysql-slow-query-log
 reset-mysql-slow-query-log: ## app上でMySQLのスロークエリログを有効化&リセット(/tmp/isucon-suburiがあることが前提)
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo bash /tmp/isucon-suburi/private-isu/reset-mysql-slow-query-log.sh"]}'
+	$(call exec_command,private-isu-app,"sudo bash /tmp/isucon-suburi/private-isu/reset-mysql-slow-query-log.sh")
 
 .PHONY: bench
 bench: ## benchmarker実行
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-benchmarker)))
 	$(eval APP_IP := $(shell aws ec2 describe-instances --filters "Name=tag:Name,Values=private-isu-app" "Name=instance-state-name,Values=running" --query 'Reservations[].Instances[].PrivateIpAddress' --output text))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo -u isucon /home/isucon/private_isu.git/benchmarker/bin/benchmarker -u /home/isucon/private_isu.git/benchmarker/userdata -t http://${APP_IP}/"]}'
+	$(call exec_command,private-isu-benchmarker,"sudo -u isucon /home/isucon/private_isu.git/benchmarker/bin/benchmarker -u /home/isucon/private_isu.git/benchmarker/userdata -t http://${APP_IP}/")
 
 .PHONY: reset-and-bench
 reset-and-bench: ## ログ周りをリセットしてbenchmarkerを走らせる
@@ -72,23 +64,20 @@ reset-and-bench: ## ログ周りをリセットしてbenchmarkerを走らせる
 
 .PHONY: alp
 alp: ## app上でnginxのログをalpで分析
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["alp json --file /var/log/nginx/access.log"]}'
+	$(call exec_command,private-isu-app,"alp json --file /var/log/nginx/access.log")
 
 .PHONY: pt-query-digest
 pt-query-digest: ## app上でmysqlのスロークエリログを分析
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo pt-query-digest /var/log/mysql/mysql-slow.log"]}'
-
-.PHONY: show-processlist
-show-processlist: ## app上でMySQLが処理しているSQLを表示
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo mysql isuconp -e \"show processlist;\""]}'
+	$(call exec_command,private-isu-app,"sudo pt-query-digest /var/log/mysql/mysql-slow.log")
 
 .PHONY: show-isu-ruby-status
 show-isu-ruby-status: ## app上でのisu-rubyのserviceの状態を確認
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["systemctl status isu-ruby"]}'
+	$(call exec_command,private-isu-app,"systemctl status isu-ruby")
+
+.PHONY: tail-cloud-init-output
+tail-cloud-init-output: ## app,benchmarker上でのcloud-init-output.logをtail
+	$(call exec_command,private-isu-app,"sudo tail /var/log/cloud-init-output.log")
+	$(call exec_command,private-isu-benchmarker,"sudo tail /var/log/cloud-init-output.log")
 
 .PHONY: 01-add-comments-index
 01-add-comments-index: ## appのdbのcommentsテーブルにindexを貼る
@@ -99,7 +88,6 @@ show-isu-ruby-status: ## app上でのisu-rubyのserviceの状態を確認
 02-increase-worker-process-for-isu-ruby: ## appのワーカープロセスを増やす
 	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
 	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo sed -i"]}'
-
 
 ################################################################################
 # Utility-Command help
@@ -119,10 +107,29 @@ define help
 endef
 
 # Activeなec2インスタンスidを出す
-# $(1): ec2 instanceの名前
+# $(1): ec2 インスタンスの名前
 define instance_id
-  aws ec2 describe-instances --filters "Name=tag:Name,Values=$(1)" "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].InstanceId" \
-  | jq -r '. | .[0]'
+  aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=$(1)" "Name=instance-state-name,Values=running" \
+    --query "Reservations[].Instances[].InstanceId" \
+    --output text
+endef
+
+# ec2インスタンスに引数のコマンドを実行する
+# $(1): ec2 インスタンスの名前
+# $(2): 実行するコマンド
+define exec_command
+  $(eval INSTANCE_ID := $(shell $(call instance_id,$(1))))
+  @echo "----"
+  @echo "対象のEC2インスタンス名: $(1)"
+  @echo "対象のEC2インスタンスID: ${INSTANCE_ID}"
+  @echo "叩くコマンド: $(2)"
+  @echo "----"
+
+  @aws ssm start-session \
+    --target "${INSTANCE_ID}" \
+    --document-name AWS-StartNonInteractiveCommand \
+    --parameters '{"command": [$(2)]}'
 endef
 
 ################################################################################
