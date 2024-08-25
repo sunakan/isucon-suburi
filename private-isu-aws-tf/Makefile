@@ -104,6 +104,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 05-use-join-in-sql: ## SQLのJOINを使う
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/05-use-join-in-sql.sh")
 
+.PHONY: 06-increase-limits
+06-increase-limits: ## ファイルディスクリプタの上限を増やす
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/06-increase-limits.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
