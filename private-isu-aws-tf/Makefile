@@ -79,6 +79,10 @@ tail-cloud-init-output: ## app,benchmarker上でのcloud-init-output.logをtail
 	$(call exec_command,private-isu-app,"sudo tail /var/log/cloud-init-output.log")
 	$(call exec_command,private-isu-benchmarker,"sudo tail /var/log/cloud-init-output.log")
 
+.PHONY: reset-mysql
+reset-mysql: ## mysqlを初期値以降にできたデータを削除
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/reset-mysql.sh")
+
 .PHONY: 01-add-comments-index
 01-add-comments-index: ## appのdbのcommentsテーブルにindexを貼る
 	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
