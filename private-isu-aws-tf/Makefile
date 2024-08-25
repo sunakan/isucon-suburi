@@ -116,6 +116,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 08-add-comments-index: ## appのdbのcommentsテーブルにindexを貼る
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/08-add-index.sh")
 
+.PHONY: 09-cache-sql-result
+09-cache-sql-result: ## SQLの結果をキャッシュする
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/09-cache-sql-result.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
