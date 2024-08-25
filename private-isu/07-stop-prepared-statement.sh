@@ -20,7 +20,8 @@ echo "----[ bundle install ]"
 
 sudo su - isucon
 cd /home/isucon/private_isu/webapp/ruby/
-sudo -u isucon /home/isucon/.local/ruby/bin/bundle install
+export PATH=${PATH}:/home/isucon/.local/ruby/bin/
+/home/isucon/.local/ruby/bin/bundle install
 
 sudo systemctl restart isu-ruby
 echo "isu-rubyを再起動しました"
