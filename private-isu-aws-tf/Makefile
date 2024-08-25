@@ -64,7 +64,7 @@ reset-and-bench: ## ログ周りをリセットしてbenchmarkerを走らせる
 
 .PHONY: alp
 alp: ## app上でnginxのログをalpで分析
-	$(call exec_command,private-isu-app,"alp json --file /var/log/nginx/access.log")
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/alp.sh")
 
 .PHONY: pt-query-digest
 pt-query-digest: ## app上でmysqlのスロークエリログを分析
@@ -85,13 +85,11 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 
 .PHONY: 01-add-comments-index
 01-add-comments-index: ## appのdbのcommentsテーブルにindexを貼る
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo mysql isuconp -e \"alter table comments add index post_id_idx (post_id, created_at desc)\""]}'
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/01-add-index.sh")
 
 .PHONY: 02-increase-worker-process-for-isu-ruby
 02-increase-worker-process-for-isu-ruby: ## appのワーカープロセスを増やす
-	$(eval INSTANCE_ID := $(shell $(call instance_id,private-isu-app)))
-	aws ssm start-session --target ${INSTANCE_ID} --document-name AWS-StartNonInteractiveCommand --parameters '{"command": ["sudo sed -i"]}'
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/02-increase-worker-process.sh")
 
 .PHONY: 04-uploaded-img-to-static-file
 04-uploaded-img-to-static-file: ## アップロード画像を静的にして、Nginxでキャッシュする
