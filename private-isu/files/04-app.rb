@@ -333,7 +333,7 @@ module Isuconp
         )
         pid = db.last_id
 
-        # # アップロードされたテンポラリファイルをmvして配信ディレクトリに移動
+        # アップロードされたテンポラリファイルをmvして配信ディレクトリに移動
         imgfile = IMAGE_DIR + "/#{pid}.#{ext}"
         FileUtils.mv(params['file'][:tempfile], imgfile)
         FileUtils.chmod(0644, imgfile)

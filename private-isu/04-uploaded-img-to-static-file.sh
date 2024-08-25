@@ -2,6 +2,8 @@
 
 set -eu
 
+mkdir -p /home/isucon/private_isu/webapp/public/image
+
 echo "----[ app.rbの上書き ]"
 echo "FROM: /tmp/isucon-suburi/private-isu/files/04-app.rb"
 echo "TO: /home/isucon/private_isu/webapp/ruby/app.rb"
