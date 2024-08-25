@@ -112,6 +112,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 07-stop-prepared-statement: ## プリペアドステートメントを使わない
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/07-stop-prepared-statement.sh")
 
+.PHONY: 08-add-comments-index
+08-add-comments-index: ## appのdbのcommentsテーブルにindexを貼る
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/08-add-index.sh")
+
 ################################################################################
 # Utility-Command help
 ################################################################################
