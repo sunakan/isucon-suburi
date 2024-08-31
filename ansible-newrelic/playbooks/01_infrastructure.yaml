@@ -1,0 +1,20 @@
+# 参考: https://docs.newrelic.com/jp/docs/infrastructure/install-infrastructure-agent/linux-installation/install-infrastructure-monitoring-agent-linux/
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+    - get_url: url=https://download.newrelic.com/infrastructure_agent/gpg/newrelic-infra.gpg dest=/etc/apt/keyrings/newrelic-infra.asc
+    - setup: gather_subset='distribution_release'
+    # todo: debugをコメントアウト
+    - debug: msg="Ubuntuの{{ ansible_facts.distribution_release }}"
+    - lineinfile: path=/etc/apt/sources.list.d/newrelic-infra.list line='deb [signed-by=/etc/apt/keyrings/newrelic-infra.asc] https://download.newrelic.com/infrastructure_agent/linux/apt/ {{ ansible_facts.distribution_release }} main' state=present create=yes mode=644
+    - apt: autoclean=yes
+    - apt: update_cache=yes
+    - apt: name=newrelic-infra state=present
+
+# ライセンスキー
+# echo "license_key: YOUR_LICENSE_KEY" | sudo tee /etc/newrelic-infra.yml
+#
+# ログ
+# journalctl -u newrelic-infra
