@@ -80,7 +80,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
     Name = local.name
   }
 }
-# (テザリングなど)自分のIPアドレスからの80番ポートのアクセス許可
+# (テザリングなど)自分のIPアドレスからの全てのアクセス許可
 resource "aws_vpc_security_group_ingress_rule" "allow_from_myip" {
   security_group_id = aws_security_group.this.id
   from_port         = -1
@@ -89,5 +89,19 @@ resource "aws_vpc_security_group_ingress_rule" "allow_from_myip" {
   cidr_ipv4         = local.my_ip_cidr
   tags = {
     Name = local.name
+  }
+}
+
+# NewRelicが公開しているIPアドレスからの全てのアクセス許可
+# todo: 絞る
+resource "aws_vpc_security_group_ingress_rule" "allow_from_newrelic" {
+  for_each = toset(local.newrelic_cidrs)
+  security_group_id = aws_security_group.this.id
+  from_port         = -1
+  to_port           = -1
+  ip_protocol       = "-1"
+  cidr_ipv4         = each.key
+  tags = {
+    Name = "allow-from-newrelic-${index(local.newrelic_cidrs, each.key) + 1}"
   }
 }
