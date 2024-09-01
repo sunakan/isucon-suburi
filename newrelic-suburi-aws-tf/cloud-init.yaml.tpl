@@ -11,6 +11,7 @@ packages:
   - tree
   - psmisc
   - net-tools
+  - nginx
 
 # psmisc: pstreeのため
 # net-tools: ifconfigのため
