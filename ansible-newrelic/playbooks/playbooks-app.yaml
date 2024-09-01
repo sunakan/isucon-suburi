@@ -1,4 +1,4 @@
 ---
 - import_playbook: 00_base.yaml
 - import_playbook: 01_infrastructure.yaml
-- import_playbook: 01_infrastructure_log.yaml
+- import_playbook: 02_infrastructure_log.yaml
