@@ -43,6 +43,10 @@ open-app: ## open
 	$(eval APP_IP := $(shell aws ec2 describe-instances --filters "Name=tag:Name,Values=private-isu-app" "Name=instance-state-name,Values=running" --query 'Reservations[].Instances[].PublicIpAddress' --output text))
 	@open http://${APP_IP}/
 
+.PHONY: create-isuconp-user
+create-isuconp-user: ## isuconp ユーザーを作成
+	$(call exec_command,private-isu-app,"sudo bash /tmp/isucon-suburi/private-isu/create-isuconp-user-mysql.sh")
+
 .PHONY: reset-nginx-log
 reset-nginx-log: ## app上でnginxのログをリセット(/tmp/isucon-suburiがあることが前提)
 	$(call exec_command,private-isu-app,"sudo bash /tmp/isucon-suburi/private-isu/reset-nginx-log.sh")
