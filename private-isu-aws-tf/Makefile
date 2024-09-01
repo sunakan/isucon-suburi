@@ -47,6 +47,10 @@ open-app: ## open
 create-isuconp-user: ## isuconp ユーザーを作成
 	$(call exec_command,private-isu-app,"sudo bash /tmp/isucon-suburi/private-isu/create-isuconp-user-mysql.sh")
 
+.PHONY: create-newrelic-user
+create-newrelic-user: ## newrelic ユーザーを作成
+	$(call exec_command,private-isu-app,"sudo bash /tmp/isucon-suburi/private-isu/create-newrelic-user-mysql.sh")
+
 .PHONY: reset-nginx-log
 reset-nginx-log: ## app上でnginxのログをリセット(/tmp/isucon-suburiがあることが前提)
 	$(call exec_command,private-isu-app,"sudo bash /tmp/isucon-suburi/private-isu/reset-nginx-log.sh")
