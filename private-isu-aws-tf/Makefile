@@ -63,6 +63,7 @@ bench: ## benchmarker実行
 .PHONY: reset-and-bench
 reset-and-bench: ## ログ周りをリセットしてbenchmarkerを走らせる
 	@make reset-nginx-log
+	@make create-isuconp-user
 	@make reset-mysql
 	@make reset-mysql-slow-query-log
 	@make bench
