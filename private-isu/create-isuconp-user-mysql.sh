@@ -11,7 +11,7 @@ sudo mysql isuconp -e "grant all privileges on isuconp.* to 'isuconp'@'%'";
 
 
 echo "----[ MySQLを公開する ]"
-cat mysqld.cnf | sudo sed -i 's/^bind-address.*= 127\.0\.0\.1/bind-address = 0\.0\.0\.0/'
+sudo sed -i 's/^bind-address.*= 127\.0\.0\.1/bind-address = 0\.0\.0\.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
 
 
 echo "----[ MySQLを再起動 ]"
