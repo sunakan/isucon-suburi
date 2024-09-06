@@ -68,6 +68,7 @@ bench: ## benchmarker実行
 reset-and-bench: ## ログ周りをリセットしてbenchmarkerを走らせる
 	@make reset-nginx-log
 	@make create-isuconp-user
+	@make create-newrelic-user
 	@make reset-mysql
 	@make reset-mysql-slow-query-log
 	@make bench
