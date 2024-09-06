@@ -33,3 +33,16 @@ CREATE TABLE `posts` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 ;
 ```
+
+```sql
+create user 'isuconp'@'%' identified by 'isuconp';
+grant all privileges on isuconp.* to 'isuconp'@'%';
+```
+
+```
+sudo nvim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+bind-address: 0.0.0.0
+
+sudo systemctl restart mysql
+```
