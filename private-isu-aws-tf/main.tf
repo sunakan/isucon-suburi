@@ -21,7 +21,7 @@ resource "aws_instance" "app" {
   subnet_id            = aws_subnet.this.id
   iam_instance_profile = aws_iam_instance_profile.this.name
   # sudo tail -f /var/log/cloud-init-output.log
-  user_data            = base64encode(file("cloud-init-app.yaml"))
+  user_data = base64encode(file("cloud-init-app.yaml"))
   tags = {
     Name = "${local.name}-app"
   }
@@ -36,7 +36,7 @@ resource "aws_instance" "app" {
 }
 
 resource "aws_instance" "benchmarker" {
-  ami = data.aws_ssm_parameter.latest_ubuntu_ami.value
+  ami                  = data.aws_ssm_parameter.latest_ubuntu_ami.value
   instance_type        = "c7g.xlarge"
   subnet_id            = aws_subnet.this.id
   iam_instance_profile = aws_iam_instance_profile.this.name
