@@ -146,6 +146,10 @@ reset-mysql: ## mysqlを初期値以降にできたデータを削除
 13-modify-mysql-cnf: ## mysqlの設定を変更
 	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/13-modify-mysql-cnf.sh")
 
+.PHONY: 14-add-newrelic
+14-add-newrelic: ## Newrelicを追加
+	$(call exec_command,private-isu-app,"bash /tmp/isucon-suburi/private-isu/14-add-newrelic.sh")
+
 .PHONY: setup-all
 setup-all: ## 01~全て適用する
 	@make 01-add-comments-index
@@ -161,6 +165,7 @@ setup-all: ## 01~全て適用する
 	@make 11-use-force-index
 	@make 12-use-openssl-gem
 	@make 13-modify-mysql-cnf
+	@make 14-add-newrelic
 
 ################################################################################
 # Utility-Command help
